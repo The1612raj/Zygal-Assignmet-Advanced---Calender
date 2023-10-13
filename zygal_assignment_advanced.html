@@ -6,72 +6,90 @@
     <style>
         .main-div {
             border: 1px solid;
-            /* display: flex; */
-            justify-content: center;
-            height: 100%;
-            padding: 3%;
+            width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-sizing: 0 0 10px rgba (0,0,0,0.1);
         }
 
         .dropdown-div {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            margin-right: 20px;
         }
 
         .months,
         .years {
-            padding: 2%;
-            margin: 2%;
+            padding: 10px;
+            margin: 18px;
             /* position: relative; */
+            border: 1px solid #ccc;
+            border-radius: 5px;
             font-family: 'Times New Roman';
             font-size: 150%;
         }
 
         .input {
-            padding: 1% 1%;
+            padding: 10px;
             font-family: 'Times New Roman';
-            font-size: 150%;
-            width: 15%;
+            font-size: 18px;
+            width: 70px;
         }
 
         .button {
-            padding: 1% 1%;
+            padding: 10px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border: none;
             font-family: 'Times New Roman';
-            font-size: 150%;
-            width: 10%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover{
+            background-color: #0056b3;
         }
 
         ul {
             list-style-type: none;
+            padding: 0;
         }
 
         .weekdays {
-            margin: 0%;
-            padding: 1% 0%;
-            border: 1px solid;
+            display: flex;
+            justify-content: space-between;
+            margin: 0;
+            padding: 10px 0;
+            background-color: #007bff;
+            color: #fff;
         }
 
         .weekdays li {
-            display: inline-block;
-            width: 13%;
+            width: 14.28%;
             text-align: center;
-            padding: 1% 0%;
-            font-size: 20px;
+            font-size: 18px;
         }
 
         .days {
-            padding: 1% 0%;
+            padding: 10px 0%;
             margin: 0;
-            border: 1px solid;
+
         }
 
         .days li {
             list-style-type: none;
             display: inline-block;
-            width: 13%;
+            width: 14.28%;
             text-align: center;
             margin-bottom: 5px;
-            font-size: 20px;
-            padding: 1% 0%;
+            font-size: 18px;
+        }
+        .selected-day{
+            background-color: #28a745;
+            color: #fff;
+            width: auto;
         }
 
     </style>
@@ -183,7 +201,7 @@
                     if ("green" == document.getElementById("enteredDay").style.backgroundColor) {
                         str = str + (`<li id=${day}>${day}</li>`);
                     } else {
-                        str = str + (`<li id=${day}><span style="background: green; padding: 10px 35px">${day}<span></li>`);
+                        str = str + (`<li id=${day}><span style="background: green; padding: 5px 17px">${day}<span></li>`);
                     }
                 } else {
                     str = str + (`<li>${day}</li>`);
@@ -192,6 +210,44 @@
             return str;
         }
         var monthsDays = () => document.getElementById("days-of-month").innerHTML = daysOfMonth();
+        document.addEventListener ("DOMContentLoaded", function () {
+
+            function updateCalander() {
+           const selectedMonth = document.getElementById("months").value;
+           const selectedYear = Document.getElementById("years").value;
+           const enteredDay = parseInt(document.getElementById("enteredDay").value );
+           const daysOfMonthElement = document.getElementById("days-of-month");
+           daysOfMonthElement.innerHTML="";
+           if(!selectedMonth || !selectedYear || isNaN(enteredDay) || enteredDay < 1 || enteredDay > 31){
+            daysOfMonthElement.innerHTML= '<h5 align="center"><i>Please select a valid "month, " "Year," and enter a valid day (1-31)"</i></h5>';
+
+           }
+           else {
+            const daysInMonth = getDaysInMonth(selectedYear, selectedMonth);
+            for(let day=1; day<=daysInMonth;day++){
+                const dayElement =document.createElement("li");
+                dayElement.textContent=day;
+                if (day === enteredDay){
+                    dayElement.classList.add("selected-day");
+                }
+                daysOfMonthElement.appendChild(dayElement);
+            }
+           }
+           
+         }
+         function getDaysInMonth (year,month){
+            const nextMonth =new Date(year,month,1);
+            nextMonth.setMonth(nextMonth.getMonth() +1);
+            const daysInMonth = (nextMonth - new Date(year,month,1))/(1000 * 60 * 60 *24);
+            return daysInMonth;
+          }
+            document.getElementById("months").addEventListener("change", updateCalendar);
+            document.getElementById("years").addEventListener("change", updateCalendar);
+            document.getElementById("enteredDay").addEventListener("change", updateCalendar);
+           document.getElementById("enterButton").addEventListener("click", updateCalendar);
+          updateCalendar();
+    });
+
     </script>
 </body>
 
